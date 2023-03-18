@@ -17,8 +17,13 @@ export default function Login({ navigation }) {
 
     const handleLogin = () => {
         setErrorMessage('');
-        if ((!username && !password) || !(username === USERNAME && password === PASSWORD)) {
+        if (!username && !password) {
             setErrorMessage('Username and Password is required!!');
+            return;
+        }
+
+        if (!(username === USERNAME && password === PASSWORD)) {
+            setErrorMessage('Invalid Username and Password');
             return;
         }
 

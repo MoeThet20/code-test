@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { AppTextInput, HeaderLogo, Layout, AppDropDown, Cart } from 'components';
 import CardItem from './component/CardItem';
 import { getCardList } from 'services/cardInfo.service';
+import { CART } from 'constants/routes';
 
-export default function Dashboard() {
+export default function Dashboard({ navigation }) {
     const [cardList, setCardList] = useState([]);
     const [type, setType] = useState({});
     console.log('🚀 ~ file: dashboard.js:9 ~ Dashboard ~ cardList:', cardList);
@@ -18,6 +19,8 @@ export default function Dashboard() {
         setCardList(res.data);
         console.log(res.data[0].cardmarket.price);
     };
+
+    const handleGoToCart = () => navigation.navigate(CART);
 
     return (
         <View style={styles.container}>
@@ -35,7 +38,7 @@ export default function Dashboard() {
                         item={type}
                         placeholder={'Type'}
                         onPressMenu={(value) => setType(value)}
-                        containerStyle={{ flex: 1 }}
+                        containerStyle={styles.dropDown}
                     />
                     <AppDropDown
                         items={[
@@ -45,9 +48,9 @@ export default function Dashboard() {
                             { label: 'Test', value: 'test' }
                         ]}
                         item={type}
-                        placeholder={'Type'}
+                        placeholder={'Rarity'}
                         onPressMenu={(value) => setType(value)}
-                        containerStyle={{ flex: 1 }}
+                        containerStyle={styles.dropDown}
                     />
                     <AppDropDown
                         items={[
@@ -57,9 +60,9 @@ export default function Dashboard() {
                             { label: 'Test', value: 'test' }
                         ]}
                         item={type}
-                        placeholder={'Type'}
+                        placeholder={'Set'}
                         onPressMenu={(value) => setType(value)}
-                        containerStyle={{ flex: 1 }}
+                        containerStyle={styles.dropDown}
                     />
                 </View>
 
@@ -72,7 +75,7 @@ export default function Dashboard() {
                         )}
                         keyExtractor={(item) => item.id}
                     />
-                    <Cart />
+                    <Cart onPress={handleGoToCart} />
                 </View>
             </Layout>
         </View>
@@ -88,11 +91,15 @@ const styles = StyleSheet.create({
     },
     dropdownWrapper: {
         flexDirection: 'row',
-        marginVertical: 10
+        marginVertical: 10,
+        justifyContent: 'space-between'
     },
     cardsWrapper: {
         flex: 1,
         position: 'relative',
         marginBottom: 50
+    },
+    dropDown: {
+        width: '30%'
     }
 });
