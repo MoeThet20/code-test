@@ -19,7 +19,13 @@ function RootNavigator() {
                         headerShown: false
                     }}
                 />
-                <Stack.Screen name={DASHBOARD} component={DashboardScreen} />
+                <Stack.Screen
+                    name={DASHBOARD}
+                    component={DashboardScreen}
+                    options={{
+                        headerShown: false
+                    }}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );

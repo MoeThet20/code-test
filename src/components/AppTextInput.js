@@ -10,6 +10,7 @@ export default function AppTextInput({
     keyboardType = 'default',
     onBlur,
     onFocus,
+    style,
     ...rest
 }) {
     return (
@@ -21,7 +22,7 @@ export default function AppTextInput({
                 editable={!disabled}
                 keyboardType={keyboardType}
                 onBlur={onBlur}
-                style={styles.textInput}
+                style={[styles.textInput, { ...style }]}
                 onFocus={onFocus}
                 textAlign={'center'}
                 {...rest}
