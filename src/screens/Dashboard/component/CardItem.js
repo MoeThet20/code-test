@@ -3,13 +3,12 @@ import React from 'react';
 import { AppButton } from 'components';
 import Logo from 'assets/images/logo.png';
 
-export default function CardItem({ item, isLastIndex }) {
+export default function CardItem({ item }) {
     const price = item?.cardmarket?.prices?.averageSellPrice;
     const image = item?.images?.small;
     const total = item?.set?.total;
-
     return (
-        <View style={[styles.container, isLastIndex && { paddingBottom: 100 }]} onStartShouldSetResponder={() => true}>
+        <View style={[styles.container]} onStartShouldSetResponder={() => true}>
             <View style={styles.wrapper}>
                 <Image source={{ uri: image }} style={styles.image} />
 

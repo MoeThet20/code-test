@@ -5,15 +5,17 @@ import { persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
 
 import AuthReducer from './slice/AuthSlice';
+import CardReducer from './slice/CardSlice';
 
 const reducers = combineReducers({
-    auth: AuthReducer
+    auth: AuthReducer,
+    card: CardReducer
 });
 
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['auth']
+    whitelist: ['auth', 'card']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

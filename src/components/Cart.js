@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         position: 'absolute',
         bottom: 0,
-        right: '38%'
+        right: '35%'
     },
     cartBtn: {
         alignItems: 'center',

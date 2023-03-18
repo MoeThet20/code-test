@@ -1,14 +1,17 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { AppTextInput, HeaderLogo, Layout, AppDropDown, Cart } from 'components';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { AppTextInput, HeaderLogo, Layout, AppDropDown, Cart, LoadingModal } from 'components';
 import CardItem from './component/CardItem';
 import { getCardList } from 'services/cardInfo.service';
 import { CART } from 'constants/routes';
 
 export default function Dashboard({ navigation }) {
     const [cardList, setCardList] = useState([]);
+    console.log('🚀 ~ file: dashboard.js:10 ~ Dashboard ~ cardList:', cardList.length);
     const [type, setType] = useState({});
-    console.log('🚀 ~ file: dashboard.js:9 ~ Dashboard ~ cardList:', cardList);
+    const [page, setPage] = useState(1);
+    const [isOpenedLoadingModal, setIsOpenedLoadingModal] = useState(false);
+    const flatListRef = useRef(null);
 
     useEffect(() => {
         gettingCardList();
@@ -17,7 +20,15 @@ export default function Dashboard({ navigation }) {
     const gettingCardList = async () => {
         const res = await getCardList();
         setCardList(res.data);
-        console.log(res.data[0].cardmarket.price);
+    };
+
+    const onPressLoadMore = async () => {
+        setIsOpenedLoadingModal(true);
+        let _page = page + 1;
+        const res = await getCardList(_page);
+        setCardList([...cardList, ...res.data]);
+        setPage(page + 1);
+        setIsOpenedLoadingModal(false);
     };
 
     const handleGoToCart = () => navigation.navigate(CART);
@@ -70,14 +81,23 @@ export default function Dashboard({ navigation }) {
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         data={cardList}
-                        renderItem={({ item, index }) => (
-                            <CardItem item={item} isLastIndex={cardList.length - 1 === index} />
-                        )}
+                        renderItem={({ item }) => <CardItem item={item} />}
                         keyExtractor={(item) => item.id}
+                        contentContainerStyle={{ paddingBottom: 100 }}
+                        ListFooterComponent={() => (
+                            <TouchableOpacity
+                                activeOpacity={0.7}
+                                onPress={() => onPressLoadMore()}
+                                style={{ alignItems: 'center' }}
+                            >
+                                <Text>show more</Text>
+                            </TouchableOpacity>
+                        )}
                     />
                     <Cart onPress={handleGoToCart} />
                 </View>
             </Layout>
+            <LoadingModal isOpen={isOpenedLoadingModal} />
         </View>
     );
 }
