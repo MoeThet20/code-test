@@ -3,18 +3,23 @@ import React from 'react';
 import { AppButton } from 'components';
 import Logo from 'assets/images/logo.png';
 
-export default function CardItem() {
+export default function CardItem({ item }) {
+    const price = item?.cardmarket?.prices?.averageSellPrice;
+    const image = item?.images?.small;
+
     return (
-        <View style={styles.container}>
+        <View style={styles.container} onStartShouldSetResponder={() => true}>
             <View style={styles.wrapper}>
-                <Image source={Logo} style={styles.image} />
+                <View style={{ position: 'absolute', top: -230, width: '100%' }}>
+                    <Image source={{ uri: image }} style={styles.image} />
+                </View>
                 <Text style={styles.titleText}>POKEMON</Text>
                 <Text style={styles.rarityText}>rarity</Text>
                 <View style={styles.priceAndItemWrapper}>
-                    <Text style={styles.priceAndItemText}>$2.49</Text>
+                    <Text style={styles.priceAndItemText}>${price}</Text>
                     <Text style={styles.priceAndItemText}>3 left</Text>
                 </View>
-                <AppButton label="Select Card" style={styles.cardButton} />
+                <AppButton label="Select Card" style={styles.cardButton} textStyle={styles.selectBtnText} />
             </View>
         </View>
     );
@@ -23,10 +28,12 @@ export default function CardItem() {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        marginBottom: 10,
-        marginTop: 220
+        justifyContent: 'flex-end',
+        marginTop: 230,
+        marginBottom: 40
     },
     wrapper: {
+        position: 'relative',
         justifyContent: 'center',
         alignItems: 'center',
         width: '70%',
@@ -57,9 +64,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     image: {
-        width: '70%',
-        height: 240,
-        position: 'absolute',
-        top: -190
+        width: '100%',
+        height: 290
+    },
+    selectBtnText: {
+        fontWeight: 'bold',
+        fontSize: 18
     }
 });

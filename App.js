@@ -12,7 +12,7 @@ export default function App() {
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <StatusBar style="light" />
+                <StatusBar style="default" />
                 <SafeAreaView style={{ flex: 1 }}>
                     <RootNavigator />
                 </SafeAreaView>

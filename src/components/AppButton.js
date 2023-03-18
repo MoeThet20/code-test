@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 
-export default function AppButton({ label, onPress, style }) {
+export default function AppButton({ label, onPress, style, textStyle }) {
     return (
         <TouchableOpacity activeOpacity={0.7} style={[styles.container, style]} onPress={() => onPress && onPress()}>
-            <Text style={styles.text}>{label}</Text>
+            <Text style={[styles.text, { ...textStyle }]}>{label}</Text>
         </TouchableOpacity>
     );
 }
