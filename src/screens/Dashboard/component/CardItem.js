@@ -6,12 +6,13 @@ export default function CardItem({ item, onPress, disable }) {
     const price = item?.cardmarket?.prices?.averageSellPrice;
     const image = item?.images?.small;
     const total = item?.set?.total;
+    const name = item?.name;
     return (
         <View style={[styles.container]} onStartShouldSetResponder={() => true}>
             <View style={styles.wrapper}>
                 <Image source={{ uri: image }} style={styles.image} />
 
-                <Text style={styles.titleText}>POKEMON</Text>
+                <Text style={styles.titleText}>{name}</Text>
                 <Text style={styles.rarityText}>rarity</Text>
                 <View style={styles.priceAndItemWrapper}>
                     <Text style={styles.priceAndItemText}>${price}</Text>
