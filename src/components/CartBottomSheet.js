@@ -54,7 +54,7 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
                     </View>
                 </View>
                 <View style={styles.incDecPriceWrapper}>
-                    <View>
+                    <View style={styles.price}>
                         <Text style={styles.selectedCardNo}>1</Text>
                     </View>
                     <View style={styles.price}>
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     },
     infoWrapper: {
         justifyContent: 'space-between',
-        width: '60%'
+        width: '50%'
     },
     remainCard: {
         color: 'red'
@@ -170,7 +170,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     clearAll: {
-        textDecorationLine: 'underline'
+        textDecorationLine: 'underline',
+        marginTop: 10
     },
     incDecPriceWrapper: {
         justifyContent: 'space-between'
