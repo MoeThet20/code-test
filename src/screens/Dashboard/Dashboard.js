@@ -6,6 +6,7 @@ import { getCardList } from 'services/cardInfo.service';
 
 export default function Dashboard() {
     const [cardList, setCardList] = useState([]);
+    const [type, setType] = useState({});
     console.log('🚀 ~ file: dashboard.js:9 ~ Dashboard ~ cardList:', cardList);
 
     useEffect(() => {
@@ -24,9 +25,42 @@ export default function Dashboard() {
             <Layout isBackground={false}>
                 <AppTextInput placeholder="Name.." style={styles.textInput} />
                 <View style={styles.dropdownWrapper}>
-                    <AppDropDown />
-                    <AppDropDown />
-                    <AppDropDown />
+                    <AppDropDown
+                        items={[
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' }
+                        ]}
+                        item={type}
+                        placeholder={'Type'}
+                        onPressMenu={(value) => setType(value)}
+                        containerStyle={{ flex: 1 }}
+                    />
+                    <AppDropDown
+                        items={[
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' }
+                        ]}
+                        item={type}
+                        placeholder={'Type'}
+                        onPressMenu={(value) => setType(value)}
+                        containerStyle={{ flex: 1 }}
+                    />
+                    <AppDropDown
+                        items={[
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' },
+                            { label: 'Test', value: 'test' }
+                        ]}
+                        item={type}
+                        placeholder={'Type'}
+                        onPressMenu={(value) => setType(value)}
+                        containerStyle={{ flex: 1 }}
+                    />
                 </View>
 
                 <View style={styles.cardsWrapper}>
