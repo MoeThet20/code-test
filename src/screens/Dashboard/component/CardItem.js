@@ -3,21 +3,21 @@ import React from 'react';
 import { AppButton } from 'components';
 import Logo from 'assets/images/logo.png';
 
-export default function CardItem({ item }) {
+export default function CardItem({ item, isLastIndex }) {
     const price = item?.cardmarket?.prices?.averageSellPrice;
     const image = item?.images?.small;
+    const total = item?.set?.total;
 
     return (
-        <View style={styles.container} onStartShouldSetResponder={() => true}>
+        <View style={[styles.container, isLastIndex && { paddingBottom: 100 }]} onStartShouldSetResponder={() => true}>
             <View style={styles.wrapper}>
-                <View style={{ position: 'absolute', top: -230, width: '100%' }}>
-                    <Image source={{ uri: image }} style={styles.image} />
-                </View>
+                <Image source={{ uri: image }} style={styles.image} />
+
                 <Text style={styles.titleText}>POKEMON</Text>
                 <Text style={styles.rarityText}>rarity</Text>
                 <View style={styles.priceAndItemWrapper}>
                     <Text style={styles.priceAndItemText}>${price}</Text>
-                    <Text style={styles.priceAndItemText}>3 left</Text>
+                    <Text style={styles.priceAndItemText}>{total} left</Text>
                 </View>
                 <AppButton label="Select Card" style={styles.cardButton} textStyle={styles.selectBtnText} />
             </View>
@@ -64,8 +64,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     image: {
-        width: '100%',
-        height: 290
+        width: '70%',
+        height: 250,
+        position: 'absolute',
+        top: -200,
+        borderRadius: 20,
+        resizeMode: 'contain',
+        overflow: 'hidden'
     },
     selectBtnText: {
         fontWeight: 'bold',

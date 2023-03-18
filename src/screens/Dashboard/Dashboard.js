@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { AppTextInput, HeaderLogo, Layout, AppDropDown } from 'components';
+import { AppTextInput, HeaderLogo, Layout, AppDropDown, Cart } from 'components';
 import CardItem from './component/CardItem';
 import { getCardList } from 'services/cardInfo.service';
 
@@ -33,9 +33,12 @@ export default function Dashboard() {
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         data={cardList}
-                        renderItem={({ item }) => <CardItem item={item} />}
+                        renderItem={({ item, index }) => (
+                            <CardItem item={item} isLastIndex={cardList.length - 1 === index} />
+                        )}
                         keyExtractor={(item) => item.id}
                     />
+                    <Cart />
                 </View>
             </Layout>
         </View>
@@ -54,6 +57,8 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     cardsWrapper: {
-        flex: 1
+        flex: 1,
+        position: 'relative',
+        marginBottom: 50
     }
 });
