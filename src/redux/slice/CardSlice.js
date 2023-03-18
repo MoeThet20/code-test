@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    selectedCard: []
+    selectedCards: []
 };
 
 export const CardSlice = createSlice({
@@ -9,13 +9,13 @@ export const CardSlice = createSlice({
     initialState,
     reducers: {
         selectedCard: (state, action) => {
-            state.selectedCard = action.payload;
+            state.selectedCards = action.payload;
         },
         unSelectedCard: (state, action) => {
-            state.selectedCard = action.payload;
+            state.selectedCards = action.payload;
         },
         clearAllCard: (state) => {
-            state.selectedCard = [];
+            state.selectedCards = [];
         }
     }
 });

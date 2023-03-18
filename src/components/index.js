@@ -5,3 +5,5 @@ export { default as HeaderLogo } from './HeaderLogo';
 export { default as AppDropDown } from './AppDropDown';
 export { default as Cart } from './Cart';
 export { default as LoadingModal } from './LoadingModal';
+export { default as CartBottomSheet } from './CartBottomSheet';
+export { default as Loading } from './Loading';

@@ -1,17 +1,38 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
-import { AppTextInput, HeaderLogo, Layout, AppDropDown, Cart, LoadingModal } from 'components';
+import {
+    AppTextInput,
+    HeaderLogo,
+    Layout,
+    AppDropDown,
+    CartBottomSheet,
+    LoadingModal,
+    Cart,
+    Loading
+} from 'components';
 import CardItem from './component/CardItem';
 import { getCardList } from 'services/cardInfo.service';
-import { CART } from 'constants/routes';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectedCard } from 'redux/slice/CardSlice';
+import { SearchIcon } from 'assets/svgs';
 
-export default function Dashboard({ navigation }) {
+const DROP_DOWN_ITEMS = [
+    { label: 'Test', value: 'test' },
+    { label: 'Test', value: 'test' },
+    { label: 'Test', value: 'test' },
+    { label: 'Test', value: 'test' }
+];
+
+export default function Dashboard() {
+    const dispatch = useDispatch();
+    const { selectedCards } = useSelector((state) => state.card);
+
     const [cardList, setCardList] = useState([]);
-    console.log('🚀 ~ file: dashboard.js:10 ~ Dashboard ~ cardList:', cardList.length);
     const [type, setType] = useState({});
     const [page, setPage] = useState(1);
     const [isOpenedLoadingModal, setIsOpenedLoadingModal] = useState(false);
-    const flatListRef = useRef(null);
+    const [isOpenCartBottomSheet, setIsOpenCartBottomSheet] = useState(false);
+    const bottomSheetRef = useRef();
 
     useEffect(() => {
         gettingCardList();
@@ -31,7 +52,26 @@ export default function Dashboard({ navigation }) {
         setIsOpenedLoadingModal(false);
     };
 
-    const handleGoToCart = () => navigation.navigate(CART);
+    const handleSelect = (item) => dispatch(selectedCard([...selectedCards, ...[item]]));
+
+    const disableSelect = (id) => {
+        if (selectedCards.find((item) => item.id === id)) {
+            return true;
+        }
+        return false;
+    };
+
+    const handleOpenCart = () => {
+        setIsOpenCartBottomSheet(true);
+        bottomSheetRef?.current?.snapToIndex(0);
+    };
+
+    const handleCloseCart = () => {
+        setIsOpenCartBottomSheet(false);
+        bottomSheetRef?.current?.close();
+    };
+
+    const selectedCardTotal = selectedCards.length;
 
     return (
         <View style={styles.container}>
@@ -40,64 +80,57 @@ export default function Dashboard({ navigation }) {
                 <AppTextInput placeholder="Name.." style={styles.textInput} />
                 <View style={styles.dropdownWrapper}>
                     <AppDropDown
-                        items={[
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' }
-                        ]}
+                        items={DROP_DOWN_ITEMS}
                         item={type}
                         placeholder={'Type'}
-                        onPressMenu={(value) => setType(value)}
+                        onPressMenu={setType}
                         containerStyle={styles.dropDown}
                     />
                     <AppDropDown
-                        items={[
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' }
-                        ]}
+                        items={DROP_DOWN_ITEMS}
                         item={type}
                         placeholder={'Rarity'}
-                        onPressMenu={(value) => setType(value)}
+                        onPressMenu={setType}
                         containerStyle={styles.dropDown}
                     />
                     <AppDropDown
-                        items={[
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' },
-                            { label: 'Test', value: 'test' }
-                        ]}
+                        items={DROP_DOWN_ITEMS}
                         item={type}
                         placeholder={'Set'}
-                        onPressMenu={(value) => setType(value)}
+                        onPressMenu={setType}
                         containerStyle={styles.dropDown}
                     />
                 </View>
-
-                <View style={styles.cardsWrapper}>
-                    <FlatList
-                        showsVerticalScrollIndicator={false}
-                        data={cardList}
-                        renderItem={({ item }) => <CardItem item={item} />}
-                        keyExtractor={(item) => item.id}
-                        contentContainerStyle={{ paddingBottom: 100 }}
-                        ListFooterComponent={() => (
-                            <TouchableOpacity
-                                activeOpacity={0.7}
-                                onPress={() => onPressLoadMore()}
-                                style={{ alignItems: 'center' }}
-                            >
-                                <Text>show more</Text>
-                            </TouchableOpacity>
-                        )}
-                    />
-                    <Cart onPress={handleGoToCart} />
-                </View>
+                {cardList.length > 0 ? (
+                    <View style={styles.cardsWrapper}>
+                        <FlatList
+                            showsVerticalScrollIndicator={false}
+                            data={cardList}
+                            renderItem={({ item }) => (
+                                <CardItem item={item} onPress={handleSelect} disable={disableSelect(item.id)} />
+                            )}
+                            keyExtractor={(item) => item.id}
+                            contentContainerStyle={styles.flatContainerStyle}
+                            ListFooterComponent={() => (
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    onPress={() => onPressLoadMore()}
+                                    style={styles.flatFooterComponentStyle}
+                                >
+                                    <Text>
+                                        <SearchIcon /> show more
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        />
+                        <Cart onPress={handleOpenCart} badge={selectedCardTotal} />
+                    </View>
+                ) : (
+                    <Loading />
+                )}
             </Layout>
             <LoadingModal isOpen={isOpenedLoadingModal} />
+            {isOpenCartBottomSheet && <CartBottomSheet bottomSheetRef={bottomSheetRef} onClose={handleCloseCart} />}
         </View>
     );
 }
@@ -121,5 +154,12 @@ const styles = StyleSheet.create({
     },
     dropDown: {
         width: '30%'
+    },
+    flatContainerStyle: {
+        paddingBottom: 100
+    },
+    flatFooterComponentStyle: {
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });

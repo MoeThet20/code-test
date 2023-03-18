@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DashboardScreen, LoginScreen, CartScreen } from 'screens';
-import { LOGIN, DASHBOARD, CART } from 'constants/routes';
+import { DashboardScreen, LoginScreen } from 'screens';
+import { LOGIN, DASHBOARD } from 'constants/routes';
 import { useSelector } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
@@ -26,7 +26,6 @@ function RootNavigator() {
                         headerShown: false
                     }}
                 />
-                <Stack.Screen name={CART} component={CartScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

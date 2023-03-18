@@ -1,9 +1,8 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import { AppButton } from 'components';
-import Logo from 'assets/images/logo.png';
 
-export default function CardItem({ item }) {
+export default function CardItem({ item, onPress, disable }) {
     const price = item?.cardmarket?.prices?.averageSellPrice;
     const image = item?.images?.small;
     const total = item?.set?.total;
@@ -18,7 +17,13 @@ export default function CardItem({ item }) {
                     <Text style={styles.priceAndItemText}>${price}</Text>
                     <Text style={styles.priceAndItemText}>{total} left</Text>
                 </View>
-                <AppButton label="Select Card" style={styles.cardButton} textStyle={styles.selectBtnText} />
+                <AppButton
+                    label="Select Card"
+                    style={[styles.cardButton, disable && { backgroundColor: 'black' }]}
+                    textStyle={styles.selectBtnText}
+                    onPress={() => onPress && onPress(item)}
+                    disable={disable}
+                />
             </View>
         </View>
     );

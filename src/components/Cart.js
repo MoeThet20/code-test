@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { CartIcon } from 'assets/svgs';
 
-export default function Cart({ onPress }) {
+export default function Cart({ onPress, badge }) {
     return (
         <View style={styles.container}>
             <View style={styles.buttonBadgeWrapper}>
@@ -11,9 +11,11 @@ export default function Cart({ onPress }) {
                         <CartIcon fill="white" /> View Cart
                     </Text>
                 </TouchableOpacity>
-                <View style={styles.badge}>
-                    <Text style={styles.badgeText}>3</Text>
-                </View>
+                {badge > 0 && (
+                    <View style={styles.badge}>
+                        <Text style={styles.badgeText}>{badge}</Text>
+                    </View>
+                )}
             </View>
         </View>
     );
