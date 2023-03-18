@@ -29,6 +29,8 @@ export default function Dashboard() {
 
     const [cardList, setCardList] = useState([]);
     const [type, setType] = useState({});
+    const [rarity, setRarity] = useState({});
+    const [set, setSet] = useState({});
     const [page, setPage] = useState(1);
     const [isOpenedLoadingModal, setIsOpenedLoadingModal] = useState(false);
     const [isOpenCartBottomSheet, setIsOpenCartBottomSheet] = useState(false);
@@ -87,18 +89,19 @@ export default function Dashboard() {
                         onPressMenu={setType}
                         containerStyle={styles.dropDown}
                     />
+
                     <AppDropDown
                         items={DROP_DOWN_ITEMS}
-                        item={type}
+                        item={rarity}
                         placeholder={'Rarity'}
-                        onPressMenu={setType}
+                        onPressMenu={setRarity}
                         containerStyle={styles.dropDown}
                     />
                     <AppDropDown
                         items={DROP_DOWN_ITEMS}
-                        item={type}
+                        item={set}
                         placeholder={'Set'}
-                        onPressMenu={setType}
+                        onPressMenu={setSet}
                         containerStyle={styles.dropDown}
                     />
                 </View>
