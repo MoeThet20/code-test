@@ -9,7 +9,8 @@ export default function AppTextInput({
     containerStyle,
     keyboardType = 'default',
     onBlur,
-    onFocus
+    onFocus,
+    ...rest
 }) {
     return (
         <View style={[styles.container, containerStyle]}>
@@ -23,6 +24,7 @@ export default function AppTextInput({
                 style={styles.textInput}
                 onFocus={onFocus}
                 textAlign={'center'}
+                {...rest}
             />
         </View>
     );

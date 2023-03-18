@@ -17,14 +17,13 @@ export default function Login({ navigation }) {
 
     const handleLogin = () => {
         setErrorMessage('');
-        if (!username && !password) {
+        if ((!username && !password) || !(username === USERNAME && password === PASSWORD)) {
             setErrorMessage('Username and Password is required!!');
             return;
         }
-        if (username === USERNAME && password === PASSWORD) {
-            dispatch(signIn());
-            navigation.navigate(DASHBOARD);
-        }
+
+        dispatch(signIn());
+        navigation.navigate(DASHBOARD);
     };
 
     return (
@@ -44,6 +43,7 @@ export default function Login({ navigation }) {
                     value={password}
                     onChangeText={setPassword}
                     containerStyle={styles.inputStyle}
+                    secureTextEntry={true}
                 />
 
                 {errorMessage && (
