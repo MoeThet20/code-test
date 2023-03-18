@@ -1,12 +1,14 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Keyboard, ScrollView, Image } from 'react-native';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearAllCard } from 'redux/slice/CardSlice';
 import AppButton from './AppButton';
+import { SuccessIcon } from 'assets/svgs';
 
 export default function CartBottomSheet({ bottomSheetRef, onClose }) {
     const { selectedCards } = useSelector((state) => state.card);
+    const [paySuccess, setPaySuccess] = useState(false);
     const snapPoints = useMemo(() => ['70%'], []);
     const dispatch = useDispatch();
 
@@ -27,6 +29,11 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
     }, []);
 
     const handleClearAll = () => dispatch(clearAllCard());
+
+    const handlePayment = () => {
+        setPaySuccess(true);
+        handleClearAll();
+    };
 
     let totalAmount = 0;
 
@@ -66,6 +73,15 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
         );
     };
 
+    const SuccessComponent = () => (
+        <View style={styles.paymentContainer}>
+            <SuccessIcon />
+            <View style={styles.paymentWrapper}>
+                <Text style={styles.paymentLabel}>Payment Success</Text>
+            </View>
+        </View>
+    );
+
     return (
         <BottomSheet
             ref={bottomSheetRef}
@@ -76,31 +92,38 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
         >
             <View style={styles.container}>
                 <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                    {selectedCards.length > 0 ? (
-                        <View style={styles.contentWrapper}>
-                            <ScrollView showsVerticalScrollIndicator={false}>
-                                {selectedCards.map(renderItem)}
-                            </ScrollView>
-                            <View style={styles.footerContainer}>
-                                <TouchableOpacity activeOpacity={0.7} onPress={handleClearAll}>
-                                    <Text style={styles.clearAll}>Clear All</Text>
-                                </TouchableOpacity>
-                                <View style={styles.cardPriceWrapper}>
-                                    <Text style={styles.totalCard}>Total cards</Text>
-                                    <Text style={[styles.totalCard, styles.colorRed]}>{selectedCards.length}</Text>
+                    {!paySuccess &&
+                        (selectedCards.length > 0 ? (
+                            <View style={styles.contentWrapper}>
+                                <ScrollView showsVerticalScrollIndicator={false}>
+                                    {selectedCards.map(renderItem)}
+                                </ScrollView>
+                                <View style={styles.footerContainer}>
+                                    <TouchableOpacity activeOpacity={0.7} onPress={handleClearAll}>
+                                        <Text style={styles.clearAll}>Clear All</Text>
+                                    </TouchableOpacity>
+                                    <View style={styles.cardPriceWrapper}>
+                                        <Text style={styles.totalCard}>Total cards</Text>
+                                        <Text style={[styles.totalCard, styles.colorRed]}>{selectedCards.length}</Text>
+                                    </View>
+                                    <View style={styles.cardPriceWrapper}>
+                                        <Text style={styles.totalPrice}>Total price</Text>
+                                        <Text style={[styles.totalPrice, styles.colorRed]}>${totalAmount}</Text>
+                                    </View>
+                                    <AppButton
+                                        label="Pay now"
+                                        style={styles.payBtn}
+                                        textStyle={styles.payBtnText}
+                                        onPress={handlePayment}
+                                    />
                                 </View>
-                                <View style={styles.cardPriceWrapper}>
-                                    <Text style={styles.totalPrice}>Total price</Text>
-                                    <Text style={[styles.totalPrice, styles.colorRed]}>${totalAmount}</Text>
-                                </View>
-                                <AppButton label="Pay now" style={styles.payBtn} textStyle={styles.payBtnText} />
                             </View>
-                        </View>
-                    ) : (
-                        <View style={styles.noCard}>
-                            <Text>There is no card selected.</Text>
-                        </View>
-                    )}
+                        ) : (
+                            <View style={styles.noCard}>
+                                <Text>There is no card selected.</Text>
+                            </View>
+                        ))}
+                    {paySuccess && <SuccessComponent />}
                 </BottomSheetScrollView>
                 <View style={styles.wrapper}>
                     <TouchableOpacity activeOpacity={0.7} onPress={() => onClose && onClose()} style={styles.closeBtn}>
@@ -216,5 +239,16 @@ const styles = StyleSheet.create({
     },
     payBtnText: {
         color: 'white'
+    },
+    paymentContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    paymentLabel: {
+        fontSize: 20
+    },
+    paymentWrapper: {
+        marginTop: 30
     }
 });
