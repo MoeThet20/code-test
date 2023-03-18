@@ -15,7 +15,7 @@ export default function CardItem({ item, onPress, disable }) {
                 <Text style={styles.titleText}>{name}</Text>
                 <Text style={styles.rarityText}>rarity</Text>
                 <View style={styles.priceAndItemWrapper}>
-                    <Text style={styles.priceAndItemText}>${price}</Text>
+                    <Text style={[styles.priceAndItemText, { marginRight: 15 }]}>${price}</Text>
                     <Text style={styles.priceAndItemText}>{total} left</Text>
                 </View>
                 <AppButton

@@ -54,7 +54,10 @@ export default function Dashboard() {
         setIsOpenedLoadingModal(false);
     };
 
-    const handleSelect = (item) => dispatch(selectedCard([...selectedCards, ...[item]]));
+    const handleSelect = (item) => {
+        item.count = 1;
+        dispatch(selectedCard([...selectedCards, ...[item]]));
+    };
 
     const disableSelect = (id) => {
         if (selectedCards.find((item) => item.id === id)) {

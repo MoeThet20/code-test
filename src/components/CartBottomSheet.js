@@ -2,13 +2,14 @@ import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Keyboard, ScrollView, Image } from 'react-native';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearAllCard } from 'redux/slice/CardSlice';
+import { clearAllCard, selectedCard } from 'redux/slice/CardSlice';
 import AppButton from './AppButton';
-import { SuccessIcon } from 'assets/svgs';
+import { CrossArrowIcon, DecreaseArrowIcon, IncreaseArrowIcon, SuccessIcon } from 'assets/svgs';
 
 export default function CartBottomSheet({ bottomSheetRef, onClose }) {
     const { selectedCards } = useSelector((state) => state.card);
     const [paySuccess, setPaySuccess] = useState(false);
+    const [stock, setStock] = useState([]);
     const snapPoints = useMemo(() => ['70%'], []);
     const dispatch = useDispatch();
 
@@ -35,6 +36,38 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
         handleClearAll();
     };
 
+    const handleIncrease = (id) => {
+        const selectedCardIncrease = selectedCards.map((data) => {
+            const total = data?.set?.total;
+            if (data.id == id) {
+                const newTotal = total - 1;
+                const newCount = data.count + 1;
+                return newTotal >= 1 && newCount >= 1 ? { ...data, set: { total: newTotal }, count: newCount } : data;
+            }
+            return data;
+        });
+        dispatch(selectedCard(selectedCardIncrease));
+    };
+
+    const handleDecrease = (id) => {
+        const selectedCardDecrease = selectedCards.map((data) => {
+            const total = data?.set?.total;
+
+            if (data.id == id) {
+                const newTotal = total + 1;
+                const newCount = data.count - 1;
+                return newTotal >= 1 && newCount >= 1 ? { ...data, set: { total: newTotal }, count: newCount } : data;
+            }
+            return data;
+        });
+        dispatch(selectedCard(selectedCardDecrease));
+    };
+
+    const handleRemove = (id) => {
+        const removedCard = selectedCards.filter((data) => data.id !== id);
+        dispatch(selectedCard(removedCard));
+    };
+
     let totalAmount = 0;
 
     const renderItem = (item, index) => {
@@ -42,8 +75,9 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
         const image = item?.images?.small;
         const total = item?.set?.total;
         const name = item?.name;
+        const count = item?.count;
 
-        totalAmount += price;
+        totalAmount += price * count;
 
         return (
             <View style={styles.itemContainer} key={index}>
@@ -61,8 +95,24 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
                     </View>
                 </View>
                 <View style={styles.incDecPriceWrapper}>
-                    <View style={styles.price}>
-                        <Text style={styles.selectedCardNo}>1</Text>
+                    <View
+                        style={[styles.price, { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }]}
+                    >
+                        <Text style={styles.selectedCardNo}>{count}</Text>
+                        <View>
+                            <TouchableOpacity activeOpacity={0.7} onPress={() => handleIncrease(item.id)}>
+                                <IncreaseArrowIcon />
+                            </TouchableOpacity>
+                            {count > 1 ? (
+                                <TouchableOpacity activeOpacity={0.7} onPress={() => handleDecrease(item.id)}>
+                                    <DecreaseArrowIcon />
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity activeOpacity={0.7} onPress={() => handleRemove(item.id)}>
+                                    <CrossArrowIcon fill="#ff0000" />
+                                </TouchableOpacity>
+                            )}
+                        </View>
                     </View>
                     <View style={styles.price}>
                         <Text>price</Text>
@@ -108,7 +158,9 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
                                     </View>
                                     <View style={styles.cardPriceWrapper}>
                                         <Text style={styles.totalPrice}>Total price</Text>
-                                        <Text style={[styles.totalPrice, styles.colorRed]}>${totalAmount}</Text>
+                                        <Text style={[styles.totalPrice, styles.colorRed]}>
+                                            ${totalAmount.toFixed(2)}
+                                        </Text>
                                     </View>
                                     <AppButton
                                         label="Pay now"
@@ -210,7 +262,8 @@ const styles = StyleSheet.create({
     selectedCardNo: {
         color: '#2886f4',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: 20,
+        marginRight: 10
     },
     footerContainer: {
         width: '60%',
