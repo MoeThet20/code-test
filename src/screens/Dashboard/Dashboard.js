@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Keyboard } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import {
     AppTextInput,
@@ -64,6 +64,7 @@ export default function Dashboard() {
     const handleOpenCart = () => {
         setIsOpenCartBottomSheet(true);
         bottomSheetRef?.current?.snapToIndex(0);
+        Keyboard.dismiss();
     };
 
     const handleCloseCart = () => {

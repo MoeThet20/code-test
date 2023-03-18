@@ -6,22 +6,18 @@ export default function CartBottomSheet({ bottomSheetRef, onClose }) {
     const snapPoints = useMemo(() => ['70%'], []);
 
     useEffect(() => {
-        const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-            bottomSheetRef?.current.snapToIndex(1);
-        });
-        const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-            bottomSheetRef?.current.snapToIndex(0);
+        const hideSubscription = Keyboard.addListener('keyboardDidShow', () => {
+            bottomSheetRef?.current?.close();
         });
 
         return () => {
-            showSubscription.remove();
             hideSubscription.remove();
         };
     }, []);
 
     const handleSheetChanges = useCallback((index) => {
         if (index == -1) {
-            if (onClose) onClose(index);
+            onClose && onClose(index);
         }
     }, []);
 
